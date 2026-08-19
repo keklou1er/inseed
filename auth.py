@@ -262,6 +262,47 @@ def modifier_utilisateur(
         conn.close()
 
 
+def changer_mon_mot_de_passe(motdepasse_actuel: str, nouveau_motdepasse: str, confirmation: str) -> dict:
+    """
+    Permet à l'utilisateur CONNECTÉ de changer son propre mot de passe
+    (voir vues/mon_compte.py) — accessible à tout le monde, contrairement
+    à modifier_utilisateur() qui est réservée aux admin_region et ne
+    demande pas l'ancien mot de passe (un admin qui réinitialise le mot de
+    passe de quelqu'un d'autre n'est pas censé le connaître).
+
+    Ici, on EXIGE l'ancien mot de passe : c'est ce qui distingue "changer
+    mon propre mot de passe" de "un admin réinitialise celui d'un autre" —
+    sans ça, n'importe qui laissant sa session ouverte sur un poste partagé
+    pourrait se faire éjecter du compte par un changement de mot de passe
+    fait par quelqu'un d'autre.
+    """
+    utilisateur = utilisateur_connecte()
+    if utilisateur is None:
+        return {"ok": False, "message": "Vous devez être connecté."}
+
+    if len(nouveau_motdepasse) < 4:
+        return {"ok": False, "message": "Le nouveau mot de passe doit contenir au moins 4 caractères."}
+    if nouveau_motdepasse != confirmation:
+        return {"ok": False, "message": "La confirmation ne correspond pas au nouveau mot de passe."}
+
+    conn = get_connection()
+    try:
+        ligne = executer(
+            conn, "SELECT motdepasse_hash FROM utilisateurs WHERE id = ?", (utilisateur["id"],)
+        ).fetchone()
+        if ligne is None or not verifier_mot_de_passe(motdepasse_actuel, ligne["motdepasse_hash"]):
+            return {"ok": False, "message": "Mot de passe actuel incorrect."}
+
+        executer(
+            conn, "UPDATE utilisateurs SET motdepasse_hash = ? WHERE id = ?",
+            (hacher_mot_de_passe(nouveau_motdepasse), utilisateur["id"]),
+        )
+        conn.commit()
+        return {"ok": True, "message": "Mot de passe modifié avec succès."}
+    finally:
+        conn.close()
+
+
 def nombre_utilisateurs() -> int:
     conn = get_connection()
     try:

@@ -154,6 +154,7 @@ else:
         st.Page("vues/documentation.py", title="Documentation", icon="📁"),
         st.Page("vues/annuaires.py", title="Annuaires statistiques", icon="📚"),
         st.Page("vues/divers.py", title="État civil / Autre service", icon="➕"),
+        st.Page("vues/mon_compte.py", title="Mon compte", icon="🔑"),
     ]
 
     # "Utilisateurs" est réservée au rôle admin_region — copie exacte de la
