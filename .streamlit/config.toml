@@ -1,0 +1,15 @@
+# Thème visuel de l'application — couleurs proches de celles utilisées
+# côté PHP (assets/theme.css). Documentation officielle :
+# https://docs.streamlit.io/library/advanced-features/theming
+#
+# ASTUCE : changez simplement les couleurs ci-dessous (codes hexadécimaux)
+# pour personnaliser l'application, sans toucher à aucun fichier .py.
+[theme]
+primaryColor = "#1976d2"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#D8D6D6"
+textColor = "#000000"
+font = "sans serif"
+
+[server]
+headless = true

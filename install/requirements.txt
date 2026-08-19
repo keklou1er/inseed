@@ -1,0 +1,8 @@
+streamlit>=1.36
+pandas
+
+# Facultatif — seulement nécessaire si vous définissez DATABASE_URL pour
+# passer sur PostgreSQL (voir la section "CHANGER DE BASE" dans db.py).
+# Sinon, ignorez cette ligne : SQLite fonctionne sans rien installer de
+# plus.
+# psycopg2-binary
